@@ -1,3 +1,4 @@
-.vscode/launch.json
-power_service/__pycache__/app.cpython-35.pyc
-myFile.txt
+.vscode
+app/__pycache__
+app/data
+*.log
