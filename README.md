@@ -14,9 +14,8 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 ## Usage
 
   ```bash
-  cd power_service
-  docker build -t myimage .
-  docker run -d -p 5000:5000 -v /media/sf_FleetEnergyManagement/power_service:/app --name mycon myimage
+  cd app
+  docker-compose up
   ```
 ## Description
 
