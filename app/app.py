@@ -1,55 +1,50 @@
 
-from flask import Flask
+
+
+from flask import Flask, request, Response
 from datetime import datetime
-import re
 import dateutil.parser as dateparser
-import logging
+from http import HTTPStatus
+
+from debug import get_logger
+from energy import parse_data, respond
 
 app = Flask(__name__)
-logger = logging.getLogger()
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(message)s'
-)
-# create a file handler
-log_to_file = logging.FileHandler('power_service.log')
-log_to_file.setLevel(logging.DEBUG)
-
-# create a logging format
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-log_to_file.setFormatter(formatter)
-
-# add the handlers to the logger
-logger.addHandler(log_to_file)
+logger = get_logger()
 
 @app.route("/")
 def home():
-    logger.debug('[-] My debug message')
-    return "<h1>Flask Home 2</h1>"
+    logger.warning('Root path called. Serving error message.')
+    return "<h1>Invalid URL</h1>", HTTPStatus.BAD_REQUEST
 
-@app.route("/hello/<name>")
-def hello_there(name):
+@app.route('/data', methods=['GET', 'POST'])
+def data():
+    if request.method == 'POST':
+        return parse_data(
+            request.get_json(),
+            logger
+        )
+    if request.method == 'GET':
+        # id = request.args['spaceship_id'] #if key doesn't exist, returns a 400, bad request error
+        return respond(
+            request.args.get('spaceship_id'),
+            request.args.get('start'),
+            request.args.get('end'),
+            logger
+        )
+
+@app.route("/test/<id>")
+def id_test(id):
     now = datetime.now()
     formatted_now = now.strftime("%A, %d %B, %Y at %X")
-
-    # Filter the name argument to letters only using regular expressions. URL arguments
-    # can contain arbitrary text, so we restrict to safe characters only.
-    match_object = re.match("[a-zA-Z]+", name)
-
-    if match_object:
-        clean_name = match_object.group(0)
-    else:
-        clean_name = "Friend"
-
-    content = "Hello you, " + clean_name + "! It's " + formatted_now
+    content = "Got id " + id + ". Time: " + formatted_now
     logger.warning('[+] Some warning message')
     return content
 
-@app.route("/hello")
-def hello2():
+@app.route("/date")
+def date():
     now = datetime.now().utcnow()
     t = dateparser.parse('2018-08-24T00:20:00Z')
     res = str(now) + '</br>' + str(t)
-    print('[+] before logger')
     logger.info("[+] Useful Info message")
     return res

@@ -7,9 +7,19 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 ## Prerequisites
 
   - Docker
+
+  ```bash
+  sudo apt-get update
+  sudo apt-get install docker.io
+  docker --version
+  ```
   - Docker compose
-  - Linux?
-  - Port x, y, z
+  ```bash
+  sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+  docker-compose --version
+  ```
+  - Avaiable ports: 5000
 
 ## Usage
 
@@ -17,6 +27,9 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
   cd app
   docker-compose up
   ```
+
+  **May need to use `sudo` when using docker commands depending on installation**
+
 ## Description
 
   The application supports the following endpoints.

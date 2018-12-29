@@ -8,13 +8,14 @@ services:
      - .:/app
     links:
      - db
-    container_name: ps_con
+    container_name: ps_web_api
     depends_on:
      - db
   db:
     image: mongo:latest
     container_name: "ps_mongodb"
     restart: always
+    privileged: true
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
