@@ -1,31 +1,32 @@
 
 
 
-from flask import Flask, request, Response
-from datetime import datetime
-import dateutil.parser as dateparser
+from flask import Flask, request, Response, send_file
 from http import HTTPStatus
 
-from debug import get_logger
-from energy import parse_data, respond
+try:
+    from .debug import get_logger
+    from .data_manager.energy import ingest_data_and_respond, respond
+except ImportError:
+    from debug import get_logger
+    from data_manager.energy import ingest_data_and_respond, respond
 
 app = Flask(__name__)
 logger = get_logger()
 
 @app.route("/")
 def home():
-    logger.warning('Root path called. Serving error message.')
+    logger.warning('Root path called by client. Serving error message.')
     return "<h1>Invalid URL</h1>", HTTPStatus.BAD_REQUEST
 
 @app.route('/data', methods=['GET', 'POST'])
 def data():
     if request.method == 'POST':
-        return parse_data(
+        return ingest_data_and_respond(
             request.get_json(),
             logger
         )
     if request.method == 'GET':
-        # id = request.args['spaceship_id'] #if key doesn't exist, returns a 400, bad request error
         return respond(
             request.args.get('spaceship_id'),
             request.args.get('start'),
@@ -33,18 +34,16 @@ def data():
             logger
         )
 
-@app.route("/test/<id>")
-def id_test(id):
-    now = datetime.now()
-    formatted_now = now.strftime("%A, %d %B, %Y at %X")
-    content = "Got id " + id + ". Time: " + formatted_now
-    logger.warning('[+] Some warning message')
-    return content
+@app.route("/topusers/<count>",  methods=['GET'])
+def topusers(count):
+    logger.warning('[+] Got count ' + count)
+    return '<h1>Not Implemented</h1>', HTTPStatus.NOT_IMPLEMENTED
 
-@app.route("/date")
-def date():
-    now = datetime.now().utcnow()
-    t = dateparser.parse('2018-08-24T00:20:00Z')
-    res = str(now) + '</br>' + str(t)
-    logger.info("[+] Useful Info message")
-    return res
+@app.route("/forecast",  methods=['GET'])
+def forecast():
+    logger.warning('[+] Some warning message')
+    return '<h1>Not Implemented</h1>', HTTPStatus.NOT_IMPLEMENTED
+
+@app.route("/chart",  methods=['GET'])
+def send_jpg():
+    return send_file('big.jpg', mimetype='image/jpg')

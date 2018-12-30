@@ -1,18 +1,21 @@
 import logging
 
+
+logfile = './power_service.log'
 def get_logger():
     # setup logging
     logger = logging.getLogger()
+    fmt = '%(levelname)-8s %(filename)s:%(lineno)s - %(funcName)s() - %(message)s'
     logging.basicConfig(
         level=logging.DEBUG,
-        format='%(asctime)s - %(message)s'
+        format=fmt
     )
     # create a file handler
-    log_to_file = logging.FileHandler('power_service.log')
+    log_to_file = logging.FileHandler(logfile)
     log_to_file.setLevel(logging.DEBUG)
 
     # create a logging format
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(fmt)
     log_to_file.setFormatter(formatter)
 
     # add the handlers to the logger

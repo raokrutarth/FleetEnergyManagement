@@ -1,6 +1,7 @@
 .vscode
-app/__pycache__
+*__pycache__
 app/data
 *.log
 *data*.txt
 *.dat
+energy_usage.json

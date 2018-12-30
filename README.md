@@ -222,6 +222,8 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 
 ## Resources
 
+https://dzone.com/articles/playing-with-docker-mqtt-grafana-influxdb-python-a
+
 https://www.codementor.io/dongido/how-to-build-restful-apis-with-python-and-flask-fh5x7zjrx
 
 <https://medium.com/@umerfarooq_26378/web-services-in-python-ef81a9067aaf>
