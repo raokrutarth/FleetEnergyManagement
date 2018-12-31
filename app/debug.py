@@ -1,7 +1,7 @@
 import logging
 
 
-logfile = './power_service.log'
+logfile = './data/power_service.log'
 def get_logger():
     # setup logging
     logger = logging.getLogger()

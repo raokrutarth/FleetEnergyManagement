@@ -19,8 +19,6 @@ log = get_logger()
 
 @app.route("/")
 def home():
-    log.info('{}'.format(os.environ))
-    DBManager.setup(log)
     log.warning('Root path called by client. Serving error message.')
     return "<h1>Invalid URL</h1>", HTTPStatus.METHOD_NOT_ALLOWED
 

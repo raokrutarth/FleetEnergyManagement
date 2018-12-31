@@ -1,7 +1,7 @@
 
 
 from datetime import datetime
-import dateutil.parser as dateparser
+import dateutil.parser
 import pandas as pd
 import numpy as np
 
@@ -66,11 +66,12 @@ class Parser:
         df, err = Parser.make_timeseries_df(energy_usage_log, logger)
         if err != '':
             return None, err
-        # df = df.resample(TIME_FREQ, label='right').sum()
-        df = df.groupby(pd.Grouper(freq=TIME_FREQ, label='right')).sum()
+        grouped = df.groupby(pd.Grouper(freq=TIME_FREQ, label='right')).sum()
+        # keep original data if already 15-min spaced
+        if len(grouped) != len(df):
+            df = grouped
         logger.debug('After split: {}'.format(df))
-        return df.to_json(orient='records', index=True), ''
-
+        return df, ''
 
     @staticmethod
     def convert_and_split(power_usage_log, logger):
@@ -82,12 +83,15 @@ class Parser:
         df, err = Parser.make_timeseries_df(power_usage_log, logger)
         if err != '':
             return None, err
-        df = df.groupby(pd.Grouper(freq=TIME_FREQ, label='right')).mean()
-        df = df.fillna(method='ffill')
+        grouped = df.groupby(pd.Grouper(freq=TIME_FREQ, label='right')).mean()
+        # Don't change the labels if already 15min spaced
+        if len(grouped) != len(df):
+            df = grouped
+            df = df.fillna(method='ffill')
         # convert kw to kwh
         df['value'] *= (15/60.0)
         logger.debug('After convert and split: {}'.format(df))
-        return df.to_json(orient='records', index=True), ''
+        return df, ''
 
     @staticmethod
     def funcname(parameter_list):
