@@ -30,9 +30,16 @@ def ingest_data_and_respond(data, logger):
         return err, HTTPStatus.BAD_REQUEST
     logger.debug('Saving entry: {}'.format(new_entry))
     FileOps.save_entry(new_entry)
-    return 'Successfully POSTed'
+    return 'Successfully saved {}'.format(data)
 
 def respond(ship_id, start, end, logger):
+    if not ship_id:
+        return 'spaceship_id not found'
+    elif not start:
+        return 'start time not found'
+    elif not end:
+        return 'end time not found'
+
     logger.info('Got params: ship_id: {}, start: {}, end: {}'.format(ship_id, start, end))
     saved = FileOps.read()
     logger.debug("Retrived saved data: {}".format(saved))

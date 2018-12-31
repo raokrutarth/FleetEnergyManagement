@@ -2,5 +2,7 @@ flask==0.12.2
 gunicorn
 python-dateutil
 flask_restful
-pandas
+pandas==0.23.0
 numpy
+influxdb==5.2.1
+requests
