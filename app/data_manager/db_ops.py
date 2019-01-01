@@ -55,7 +55,7 @@ class DBManager:
         return DB_CLIENT.query('SELECT * FROM {}'.format(TIMESERIES_NAME))
 
     @staticmethod
-    def save_entry(ship_id, timeseries):
+    def save_energy_entry(ship_id, timeseries):
         return DB_CLIENT.write_points(
             timeseries,
             measurement=TIMESERIES_NAME,
@@ -63,7 +63,7 @@ class DBManager:
             protocol='json')
 
     @staticmethod
-    def get_full_entry(ship_id):
+    def get_full_energy_entry(ship_id):
         return DB_CLIENT.query("SELECT * FROM {} WHERE {}='{}'".format(
                     TIMESERIES_NAME,
                     TAG_KEY,
@@ -71,7 +71,7 @@ class DBManager:
                     )
                 )
     @staticmethod
-    def get_entry(ship_id, start, end, log):
+    def get_energy_entry(ship_id, start, end, log):
         log.debug('Making DB time query. ship_id: {}, start: {}, end: {}'.format(
             ship_id, start, end))
         start = pd.Timestamp(start)

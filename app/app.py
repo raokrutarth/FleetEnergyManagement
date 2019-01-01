@@ -42,9 +42,11 @@ def topusers(count):
 
 @app.route("/forecast",  methods=['GET'])
 def forecast():
-    log.warning('[+] Some warning message')
+    log.warning('forecast endpoint called')
     return '<h1>Not Implemented</h1>', HTTPStatus.NOT_IMPLEMENTED
 
-@app.route("/chart",  methods=['GET'])
-def send_jpg():
-    return send_file('big.jpg', mimetype='image/jpg')
+@app.route("/usagechart",  methods=['GET'])
+def send_chart_jpg():
+    log.warning('usagechart endpoint called')
+    chart_res = send_file('big.jpg', mimetype='image/jpg')
+    return '<h1>Not Implemented</h1>', HTTPStatus.NOT_IMPLEMENTED
