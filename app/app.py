@@ -8,11 +8,9 @@ import os
 try:
     from .debug import get_logger
     from .data_manager.energy import ingest_data_and_respond, respond
-    from .data_manager.db_ops import DBManager
 except ImportError:
     from debug import get_logger
-    from data_manager.energy import ingest_data_and_respond, respond
-    from data_manager.db_ops import DBManager
+    from data_manager.energy import ingest_data_and_respond, respond_to_query
 
 app = Flask(__name__)
 log = get_logger()
@@ -30,7 +28,7 @@ def data():
             log
         )
     if request.method == 'GET':
-        return respond(
+        return respond_to_query(
             request.args.get('spaceship_id'),
             request.args.get('start'),
             request.args.get('end'),

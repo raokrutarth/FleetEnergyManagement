@@ -73,16 +73,14 @@ class DBManager:
     @staticmethod
     def get_entry(ship_id, start, end, log):
         log.debug('Making DB time query. ship_id: {}, start: {}, end: {}'.format(
-            ship_id, start, end
-        ))
+            ship_id, start, end))
         start = pd.Timestamp(start)
         end = pd.Timestamp(end)
-        return DB_CLIENT.query(("SELECT * FROM {} WHERE {}='{}' "
-                                "AND time >= '{}' AND time <= '{}'").format(
-                                    TIMESERIES_NAME,
-                                    TAG_KEY,
-                                    str(ship_id),
-                                    start.isoformat(),
-                                    end.isoformat(),
-                                )
-                        )
+        return DB_CLIENT.query(
+            ("SELECT * FROM {} WHERE {}='{}' AND time >= '{}' AND time <= '{}'").format(
+                TIMESERIES_NAME,
+                TAG_KEY,
+                str(ship_id),
+                start.isoformat(),
+                end.isoformat())
+            )

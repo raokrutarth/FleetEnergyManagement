@@ -13,13 +13,14 @@ COLUMNS = set(['datetime', 'value'])
 
 
 class Parser:
+
     @staticmethod
     def validate_consumption_data(consumption_info, log):
         for k in OUTER_KEYS:
             if k not in consumption_info:
-                return False, "missing {} in input fields".format(k)
+                return "missing {} in input fields".format(k)
         if consumption_info['units'].lower() not in UNITS:
-            return False, 'invalid units {}'.format(consumption_info['units'])
+            return 'invalid units {}'.format(consumption_info['units'])
         # verify each time event only has 2 labels
         try:
             df = pd.DataFrame(consumption_info['data'])
@@ -29,11 +30,29 @@ class Parser:
                     df.columns
                     )
                 )
-                return False, 'invalid labels in "data"'
+                return 'invalid labels in "data"'
         except Exception as e:
-            log.debug('Got invalid data object: {}'.format(consumption_info['data']), e)
-            return False, 'invaild object in "data"'
-        return True, ''
+            log.debug('Unknown exception due to data object: {}'.format(consumption_info['data']), e)
+            return 'invaild object in "data"'
+        return ''
+
+    @staticmethod
+    def validate_query(ship_id, start, end):
+        if not ship_id:
+            return 'spaceship_id not found'
+        elif not start:
+            return 'start time not found'
+        elif not end:
+            return 'end time not found'
+        try:
+            pd.Timestamp(start)
+        except ValueError:
+            return 'invalid start time: ' + start
+        try:
+            pd.Timestamp(end)
+        except ValueError:
+            return 'invalid end time: ' + end
+        return ''
 
     @staticmethod
     def make_timeseries_df(data, log):
@@ -94,8 +113,8 @@ class Parser:
         return df, ''
 
     @staticmethod
-    def funcname(parameter_list):
-        t = dateparser.parse('2018-08-24T00:20:00Z')
+    def format_iso_str(date='2018-08-24T00:20:00Z'):
+        t = dateparser.parse(date)
         formatted_t = t.strftime("%A, %d %B, %Y at %X")
-        return
+        return formatted_t
 
