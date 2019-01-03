@@ -84,3 +84,22 @@ class DBManager:
                 start.isoformat(),
                 end.isoformat())
             )
+
+    @staticmethod
+    def delete_full_energy_entry(ship_id, log):
+        log.debug('Deleting DB entry for ship_id: {}'.format(ship_id))
+        return DB_CLIENT.query(
+            ("DELETE FROM {} WHERE {}='{}'").format(
+                TIMESERIES_NAME,
+                TAG_KEY,
+                str(ship_id),
+            ))
+
+    @staticmethod
+    def delete_all_data(log):
+        log.critical('Deleting all DB entries')
+        return DB_CLIENT.query(
+            ("DELETE FROM {}").format(
+                TIMESERIES_NAME,
+            ))
+

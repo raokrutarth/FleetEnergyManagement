@@ -1,5 +1,7 @@
 
 from http import HTTPStatus
+from flask import Response
+from json import dumps
 try:
     from .parse import Parser
     from .db_ops import DBManager
@@ -10,18 +12,17 @@ except ImportError:
 
 def ingest_data_and_respond(data, log):
     log.info('Got POSTed data: {}'.format(data))
-    err = Parser.validate_consumption_data(data, log)
+    timeseries_df, err = Parser.validate_parse_consumption_data(data, log)
     if err != '':
         return err, HTTPStatus.BAD_REQUEST
 
     ship_id = data['spaceship_id']
     units = data['units'].lower()
-    ts_data = data['data']
 
     if units == 'kwh':
-        timeseries, err = Parser.split(ts_data, log)
+        timeseries, err = Parser.split(timeseries_df, log)
     elif units == 'kw':
-        timeseries, err = Parser.convert_and_split(ts_data, log)
+        timeseries, err = Parser.convert_and_split(timeseries_df, log)
 
     if err != '':
         return err, HTTPStatus.BAD_REQUEST
@@ -46,9 +47,18 @@ def ingest_data_and_respond(data, log):
 def respond_to_query(ship_id, start, end, log):
     err = Parser.validate_query(ship_id, start, end)
     if err != '':
-        return err, HTTPStatus.BAD_REQUEST
+        return {'error': err}, HTTPStatus.BAD_REQUEST
+
+    try:
+        ship_id = int(ship_id)
+    except ValueError:
+        ship_id = str(ship_id)
 
     log.info('Got params: ship_id: {}, start: {}, end: {}'.format(ship_id, start, end))
-    res = DBManager.get_energy_entry(ship_id, start, end)
-    log.debug("Retrived saved data: {}".format(res))
-    return res
+    db_obj = DBManager.get_energy_entry(ship_id, start, end, log)
+    log.debug("Retrived saved data: {}".format(db_obj))
+    resp, err = Parser.db_obj_to_query_response(db_obj, log)
+    if err != '':
+        return err, HTTPStatus.SERVICE_UNAVAILABLE
+    log.debug('Converted retrived to json response: {}'.format(resp))
+    return Response(resp, status=HTTPStatus.OK, mimetype='application/json')

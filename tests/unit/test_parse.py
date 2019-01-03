@@ -1,4 +1,10 @@
 
+import sys
+
+sys.path.append('../app/')
+sys.path.append('../app/data_manager')
+import data_manager.energy
+import app
 
 
 # kwh mean and deaggregate

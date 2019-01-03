@@ -4,8 +4,10 @@ services:
     build: .
     ports:
      - "5000:5000"
+    # mount during development only
     volumes:
-     - .:/app
+     - ./app:/app
+     - ./tests:/tests
     links:
      - influxdb
     environment:
@@ -35,4 +37,4 @@ services:
      - "8086:8086"
      - "2003:2003"
     volumes:
-     - ./data:/var/lib/influxdb
+     - ./app/data:/var/lib/influxdb
