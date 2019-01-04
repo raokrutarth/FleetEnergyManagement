@@ -110,3 +110,8 @@ print('mock data json: ', json.dumps(data))
 #   }
 # ]}))
 # df.groupby('datetime')['value'].fillna(method='ffill') # fill in row 5 but not row 3
+
+
+
+df = pd.DataFrame({'A': [1, 2, 3], 'B': [1, 4, 7], 'A': [88, 99, 77]})
+print(df.isin({'C': [1, 3], 'B': [4, 7, 12]}).all().all())
