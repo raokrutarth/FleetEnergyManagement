@@ -16,11 +16,11 @@ from db_ops import DBManager
 HOST_URL = 'http://127.0.0.1:5000/data'
 
 
-
 class TestPost(unittest.TestCase):
 
     def test_post_response_basic(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kWh",
@@ -42,10 +42,11 @@ class TestPost(unittest.TestCase):
         resp = requests.post(url=HOST_URL, json=data)
         expected = 'Data saved successfully for ship %s' % ship_id
         self.assertEqual(resp.text, expected)
-        DBManager.delete_full_energy_entry(ship_id, getLogger())
+
 
     def test_post_response_missing_units_label(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "data": [
@@ -70,8 +71,8 @@ class TestPost(unittest.TestCase):
         DBManager.delete_full_energy_entry(ship_id, getLogger())
 
     def test_post_response_empty_data(self):
-
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kWh",
@@ -85,6 +86,7 @@ class TestPost(unittest.TestCase):
 
     def test_post_invalid_units(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kiloWattHour",
@@ -103,6 +105,7 @@ class TestPost(unittest.TestCase):
 
     def test_post_negative_values(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kWh",
@@ -133,6 +136,7 @@ class TestPost(unittest.TestCase):
 
     def test_post_duplicate_timestamps(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kWh",
@@ -155,6 +159,7 @@ class TestPost(unittest.TestCase):
 
     def test_post_invalid_timestamps(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kWh",
@@ -177,6 +182,7 @@ class TestPost(unittest.TestCase):
 
     def test_post_missing_data_value(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kWh",
@@ -198,6 +204,7 @@ class TestPost(unittest.TestCase):
 
     def test_post_missing_data_timestamp(self):
         ship_id = str(uuid1())
+        self.addCleanup(DBManager.delete_full_energy_entry, ship_id, getLogger())
         data = {
             "spaceship_id": ship_id,
             "units": "kWh",

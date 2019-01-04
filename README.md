@@ -2,7 +2,7 @@
 
 The Spaceship Power Service helps coordinators keep track of the energy usage by different ships. This project implements the Spaceship Power Service that handles POST and GET requests to an API endpoint.
 
-***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handeling, visualization and analysis.***
+***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handeling and analysis.***
 
 ## Prerequisites
 
@@ -24,11 +24,53 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 ## Usage
 
   ```bash
-  cd app
   docker-compose up
   ```
 
+  Sample POST
+  ```curl
+  curl -X POST \
+    http://127.0.0.1:5000/data \
+    -H 'Content-Type: application/json' \
+    -H 'cache-control: no-cache' \
+    -d '{
+        "spaceship_id": 42,
+        "units": "kW",
+        "data": [
+            {
+                "datetime": "2019-01-05T04:37:00Z",
+                "value": 1302
+            },
+            {
+                "datetime": "2019-01-05T04:42:00ZZ",
+                "value": 1200
+            },
+            {
+                "datetime": "2019-01-05T05:42:00Z",
+                "value": 3200
+            }
+        ]
+    }'
+  ```
+
+  Sample GET
+  ```curl
+  curl -X GET \
+    'http://127.0.0.1:5000/data?spaceship_id=42&start=2019-01-03T04:30:00Z&end=2019-01-05T05:42:00Z' \
+    -H 'Content-Type: application/json' \
+    -H 'cache-control: no-cache'
+  ```
+
   **May need to use `sudo` when using docker commands depending on installation**
+
+## Tests
+  Unit and integration tests can be run once all containers are up and running. If service is already running, skip
+  `docker-compose up`.
+  ```bash
+  docker-compose up
+  docker exec -it ps_web_api python -m unittest discover -v -s /tests/unit/
+  docker exec -it ps_web_api python -m unittest discover -v -s /tests/integration/
+  ```
 
 ## Description
 
@@ -239,3 +281,11 @@ https://machinelearningmastery.com/time-series-forecasting-methods-in-python-che
 
 https://medium.com/@riken.mehta/full-stack-tutorial-flask-react-docker-ee316a46e876
 
+## useful commands
+  ```bash
+  show field keys from energy
+  docker exec -it ps_influxdb bash
+
+  precision rfc3339
+  select * from energy
+  ```

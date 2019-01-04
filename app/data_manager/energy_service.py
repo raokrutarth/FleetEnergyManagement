@@ -47,18 +47,35 @@ def ingest_data_and_respond(data, log):
 def respond_to_query(ship_id, start, end, log):
     err = Parser.validate_query(ship_id, start, end)
     if err != '':
-        return {'error': err}, HTTPStatus.BAD_REQUEST
+        return Response(
+            dumps({'error': err}),
+            status=HTTPStatus.BAD_REQUEST,
+            mimetype='application/json',
+        )
 
     try:
         ship_id = int(ship_id)
     except ValueError:
         ship_id = str(ship_id)
 
-    log.info('Got params: ship_id: {}, start: {}, end: {}'.format(ship_id, start, end))
+    log.info('Got query params: ship_id: {}, start: {}, end: {}'.format(ship_id, start, end))
     db_obj = DBManager.get_energy_entry(ship_id, start, end, log)
+    if not db_obj:
+        message = 'No entries found in date range {} to {}'.format(start, end)
+        log.warning('Attempting to query invalid timeframe. sending: %s' % message)
+        return Response(
+            dumps({'error': message}),
+            status=HTTPStatus.BAD_REQUEST,
+            mimetype='application/json',
+        )
     log.debug("Retrived saved data: {}".format(db_obj))
-    resp, err = Parser.db_obj_to_query_response(db_obj, log)
+    resp, err = Parser.db_obj_to_query_response(ship_id, db_obj, log)
+
     if err != '':
-        return err, HTTPStatus.SERVICE_UNAVAILABLE
+        return Response(
+            dumps({'error': err}),
+            status=HTTPStatus.SERVICE_UNAVAILABLE,
+            mimetype='application/json',
+        )
     log.debug('Converted retrived to json response: {}'.format(resp))
     return Response(resp, status=HTTPStatus.OK, mimetype='application/json')

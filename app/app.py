@@ -54,5 +54,5 @@ def forecast():
 @app.route("/usagechart", methods=['GET'])
 def send_chart_jpg():
     log.warning('usagechart endpoint called')
-    chart_res = send_file('big.jpg', mimetype='image/jpg')
+    chart_res = send_file('myImage.jpg', mimetype='image/jpg')
     return '<h1>Not Implemented</h1>', HTTPStatus.NOT_IMPLEMENTED

@@ -21,8 +21,9 @@ DB_CLIENT = DataFrameClient(
                 database=DB_DBNAME
             )
 
-TIMESERIES_NAME = 'energy'
+DB_TIMESERIES = 'energy'
 TAG_KEY = 'ship_id'
+VALUE_KEY = 'value'
 
 class DBManager:
     '''
@@ -52,20 +53,20 @@ class DBManager:
 
     @staticmethod
     def dump_energy_ts(log):
-        return DB_CLIENT.query('SELECT * FROM {}'.format(TIMESERIES_NAME))
+        return DB_CLIENT.query('SELECT * FROM {}'.format(DB_TIMESERIES))
 
     @staticmethod
     def save_energy_entry(ship_id, timeseries):
         return DB_CLIENT.write_points(
             timeseries,
-            measurement=TIMESERIES_NAME,
+            measurement=DB_TIMESERIES,
             tags={TAG_KEY: str(ship_id)},
             protocol='json')
 
     @staticmethod
     def get_full_energy_entry(ship_id):
         return DB_CLIENT.query("SELECT * FROM {} WHERE {}='{}'".format(
-                    TIMESERIES_NAME,
+                    DB_TIMESERIES,
                     TAG_KEY,
                     str(ship_id)
                     )
@@ -77,8 +78,9 @@ class DBManager:
         start = pd.Timestamp(start)
         end = pd.Timestamp(end)
         return DB_CLIENT.query(
-            ("SELECT * FROM {} WHERE {}='{}' AND time >= '{}' AND time <= '{}'").format(
-                TIMESERIES_NAME,
+            ("SELECT {} FROM {} WHERE {}='{}' AND time >= '{}' AND time <= '{}'").format(
+                VALUE_KEY,
+                DB_TIMESERIES,
                 TAG_KEY,
                 str(ship_id),
                 start.isoformat(),
@@ -90,7 +92,7 @@ class DBManager:
         log.debug('Deleting DB entry for ship_id: {}'.format(ship_id))
         return DB_CLIENT.query(
             ("DELETE FROM {} WHERE {}='{}'").format(
-                TIMESERIES_NAME,
+                DB_TIMESERIES,
                 TAG_KEY,
                 str(ship_id),
             ))
@@ -100,6 +102,6 @@ class DBManager:
         log.critical('Deleting all DB entries')
         return DB_CLIENT.query(
             ("DELETE FROM {}").format(
-                TIMESERIES_NAME,
+                DB_TIMESERIES,
             ))
 

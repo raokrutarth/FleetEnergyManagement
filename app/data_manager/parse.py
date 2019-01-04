@@ -7,10 +7,19 @@ import numpy as np
 import json
 
 
+# db & parsing constants
 TIME_FREQ = '15T' # 15 mins
-OUTER_KEYS = set(["spaceship_id", "units", "data"])
-UNITS = set(['kw', 'kwh'])
-COLUMNS = set(['datetime', 'value'])
+DB_TIMESERIES = 'energy'
+POWER_ENERGY_RATIO_15M = (15/60.0)
+
+# input data keys
+SHIPID_KEY = 'spaceship_id'
+UNITS_KEY = 'units'
+DATA_KEY = 'data'
+POWER_UNIT = 'kW'
+ENERGY_UNIT = 'kWh'
+TS_KEY = 'datetime'
+VALUE_KEY = 'value'
 
 
 class Parser:
@@ -21,22 +30,22 @@ class Parser:
             df = pd.DataFrame(data)
             if len(df) == 0:
                 return None, 'empty data object'
-            if not COLUMNS.issubset(df.columns):
+            if not set([TS_KEY, VALUE_KEY]).issubset(df.columns):
                 # verify each time event has the required labels
                 log.debug('invalid labels in data object. \nexpected: {}\ngot: {}'.format(COLUMNS, df.columns))
                 return None, 'invalid labels in data object'
-            if any(df['value'] < 0):
+            if any(df[VALUE_KEY] < 0):
                 return None, 'got negative values in data. Negative power/energy usage not allowed'
-            df['datetime'] = pd.to_datetime(df['datetime'], utc=True)
-            df['value'] = df['value'].astype('float')
+            df[TS_KEY] = pd.to_datetime(df[TS_KEY], utc=True)
+            df[VALUE_KEY] = df[VALUE_KEY].astype('float')
 
-            if df['datetime'].isnull().any().any():
+            if df[TS_KEY].isnull().any().any():
                 log.error('missing timestamp for a datapoint in {}'.format(data))
-            if df['value'].isnull().any().any():
+            if df[VALUE_KEY].isnull().any().any():
                 log.error('missing value for a datapoint in {}'.format(data))
 
             df.dropna(inplace=True)
-            df = df.set_index('datetime')
+            df = df.set_index(TS_KEY)
             df = df.sort_index()
 
             if not pd.Series(df.index).is_unique:
@@ -60,12 +69,12 @@ class Parser:
         if not consumption_info:
             return None, 'missing json object in request'
 
-        for label in OUTER_KEYS:
+        for label in set([SHIPID_KEY, UNITS_KEY, DATA_KEY]):
             if label not in consumption_info:
                 return None, "missing {} in input fields".format(label)
 
-        if consumption_info['units'].lower() not in UNITS:
-            return None, 'invalid units {}'.format(consumption_info['units'])
+        if consumption_info[UNITS_KEY].lower() not in set([POWER_UNIT.lower(), ENERGY_UNIT.lower()]):
+            return None, 'invalid units {}'.format(consumption_info[UNITS_KEY])
 
         return Parser.make_timeseries_df(consumption_info['data'], log)
 
@@ -97,7 +106,7 @@ class Parser:
             power_usage_df = grouped
             power_usage_df = power_usage_df.fillna(method='ffill')
         # convert kw to kwh
-        power_usage_df['value'] *= (15/60.0)
+        power_usage_df['value'] *= POWER_ENERGY_RATIO_15M
         logger.debug('After convert and split: {}'.format(power_usage_df))
         return power_usage_df, ''
 
@@ -109,15 +118,17 @@ class Parser:
             return 'start time not found'
         elif not end:
             return 'end time not found'
+
+        err = ''
         try:
             pd.Timestamp(start)
         except ValueError:
-            return 'invalid start time: ' + start
+            err += 'invalid start time: %s ' % start
         try:
             pd.Timestamp(end)
         except ValueError:
-            return 'invalid end time: ' + end
-        return ''
+            err += 'invalid end time: %s' % end
+        return err
 
     @staticmethod
     def format_iso_str(date='2018-08-24T00:20:00Z'):
@@ -127,12 +138,36 @@ class Parser:
 
 
     @staticmethod
-    def db_obj_to_query_response(from_db, log):
+    def db_obj_to_query_response(ship_id, from_db, log):
         '''
-            TODO convert db object to expected format
+            converts and constructs the response from
+            the data fetched from the database
         '''
-        log.debug('Got obj: {}'.format(from_db))
-        return json.dumps({'id': 77}), ''
+        try:
+            ship_id = int(ship_id)
+        except ValueError:
+            log.warning('Got non-int ship id: %s' % ship_id)
+
+        log.debug('Got db object to convert: {}'.format(from_db))
+        try:
+            df = from_db[DB_TIMESERIES].astype('float')
+        except (ValueError, KeyError):
+            log.error('Unable to convert db returned object to dataframe')
+            return '', 'unable to parse data during fetch'
+
+        resp = {
+            SHIPID_KEY: ship_id,
+            UNITS_KEY:ENERGY_UNIT,
+            DATA_KEY: list(),
+        }
+        for timestamp, row in df.iterrows():
+            resp[DATA_KEY].append({
+                TS_KEY: timestamp.isoformat().replace('+00:00', 'Z'),
+                VALUE_KEY: int(row[VALUE_KEY])
+            })
+        log.debug('resp before json dumps: {}'.format(resp))
+        json_str = json.dumps(resp)
+        return json_str, ''
 
 
 

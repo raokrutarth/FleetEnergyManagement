@@ -7,19 +7,19 @@ BASIC = {
     "data": [
         {
             "datetime": "2018-08-24T00:00:00Z",
-            "value": 3
+            "value": 300
         },
         {
             "datetime": "2018-08-24T00:15:00Z",
-            "value": 3
+            "value": 700
         },
         {
             "datetime": "2018-08-24T00:30:00Z",
-            "value": 3
+            "value": 200
         },
         {
             "datetime": "2018-08-24T00:45:00Z",
-            "value": 3
+            "value": 100
         }
     ]
 }
@@ -68,15 +68,15 @@ TO_CONV = {
     "data": [
         {
             "datetime": "2006-12-24T04:00:00Z",
-            "value": 2
+            "value": 230
         },
         {
             "datetime": "2006-12-24T04:15:00Z",
-            "value": 1
+            "value": 120
         },
         {
             "datetime": "2006-12-24T04:30:00Z",
-            "value": 6
+            "value": 650
         },
     ]
 }
