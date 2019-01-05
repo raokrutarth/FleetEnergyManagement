@@ -4,6 +4,10 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 
 ***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handeling and analysis.***
 
+## Design
+
+  See [Design.md](/docs/Design.md). See `Design.pdf` if using offline version.
+
 ## Prerequisites
 
   - Docker
@@ -64,10 +68,10 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
   **May need to use `sudo` when using docker commands depending on installation**
 
 ## Tests
-  Unit and integration tests can be run once all containers are up and running. If service is already running, skip
+  **Unit** and **integration** tests can be run once all containers are up and running. If service is already running, skip
   `docker-compose up`.
   ```bash
-  docker-compose up
+  docker-compose up --detach
   docker exec -it ps_web_api python -m unittest discover -v -s /tests/unit/
   docker exec -it ps_web_api python -m unittest discover -v -s /tests/integration/
   ```
@@ -257,10 +261,6 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
         "expected_consumption": 5524
       }
       ```
-
-## Design
-
-  See [Design.md](/docs/Design.md).
 
 ## Resources
 
