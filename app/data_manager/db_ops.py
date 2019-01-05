@@ -1,3 +1,6 @@
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
+
 from influxdb import DataFrameClient
 import os
 import requests

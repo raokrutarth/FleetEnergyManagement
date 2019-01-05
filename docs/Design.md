@@ -90,5 +90,9 @@ https://www.influxdata.com/blog/influxdb-is-27x-faster-vs-mongodb-for-time-serie
 https://ironboundsoftware.com/blog/2016/06/27/faster-flask-need-gunicorn/
 https://docs.influxdata.com/influxdb/v1.7/concepts/schema_and_data_layout/
 
+## Author
+
+Krutarth Rao
+
 
 

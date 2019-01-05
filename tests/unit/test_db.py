@@ -1,4 +1,7 @@
 
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
+
 import sys
 import unittest
 import pandas as pd

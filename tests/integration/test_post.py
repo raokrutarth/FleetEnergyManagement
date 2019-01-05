@@ -1,4 +1,6 @@
 
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
 
 import requests
 import unittest

@@ -1,3 +1,5 @@
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
 
 from http import HTTPStatus
 from flask import Response

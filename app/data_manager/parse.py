@@ -1,4 +1,5 @@
-
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
 
 from datetime import datetime
 import dateutil.parser as dateparser
@@ -165,3 +166,5 @@ class Parser:
 
 
 
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
