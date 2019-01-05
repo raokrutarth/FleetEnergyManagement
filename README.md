@@ -2,6 +2,8 @@
 
 The Spaceship Power Service helps coordinators keep track of the energy usage by different ships. This project implements the Spaceship Power Service that handles POST and GET requests to an API endpoint.
 
+API served on port `5000`.
+
 ***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handeling and analysis.***
 
 ## Design
@@ -69,7 +71,7 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 
 ## Tests
   **Unit** and **integration** tests can be run once all containers are up and running. If service is already running, skip
-  `docker-compose up`.
+  `docker-compose up --detach`. When using `docker-compose up --detach`, services may take upto 3 seconds to become available.
   ```bash
   docker-compose up --detach
   docker exec -it ps_web_api python -m unittest discover -v -s /tests/unit/

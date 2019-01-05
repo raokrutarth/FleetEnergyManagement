@@ -8,6 +8,12 @@ sys.path.append('../../app/data_manager')
 from parse import Parser
 
 class TestParse(unittest.TestCase):
+    '''
+        Dataframe generation, JSON creation
+        from data frame, power to energy conversion,
+        query validation, data validation already tested
+        in integration tests.
+    '''
 
     @classmethod
     def setUpClass(cls):
@@ -15,21 +21,6 @@ class TestParse(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        pass
-
-    def test_parse_db_obj_converter(self):
-        pass
-
-    def test_parse_query_validator(self):
-        pass
-
-    def test_parse_power_df_converter(self):
-        pass
-
-    def test_parse_energy_df_converter(self):
-        pass
-
-    def test_parse_timeseries_df_creator(self):
         pass
 
 if __name__ == '__main__':

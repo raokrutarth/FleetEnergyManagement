@@ -131,13 +131,6 @@ class Parser:
         return err
 
     @staticmethod
-    def format_iso_str(date='2018-08-24T00:20:00Z'):
-        t = dateparser.parse(date)
-        formatted_t = t.strftime("%A, %d %B, %Y at %X")
-        return formatted_t
-
-
-    @staticmethod
     def db_obj_to_query_response(ship_id, from_db, log):
         '''
             converts and constructs the response from
