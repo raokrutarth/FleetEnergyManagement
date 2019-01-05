@@ -32,7 +32,8 @@ class Parser:
                 return None, 'empty data object'
             if not set([TS_KEY, VALUE_KEY]).issubset(df.columns):
                 # verify each time event has the required labels
-                log.debug('invalid labels in data object. \nexpected: {}\ngot: {}'.format(COLUMNS, df.columns))
+                log.debug('invalid labels in data object. \nexpected: {}\ngot: {}'\
+                    .format(set([TS_KEY, VALUE_KEY]), df.columns))
                 return None, 'invalid labels in data object'
             if any(df[VALUE_KEY] < 0):
                 return None, 'got negative values in data. Negative power/energy usage not allowed'
@@ -54,10 +55,10 @@ class Parser:
             return df, ''
         except ValueError:
             log.debug('Invalid values in "data" object detected: {}'.format(data))
-            return None, 'invalid data object'
+            return None, 'invalid values in data object'
         except KeyError:
             log.debug('Invalid/missing labels in data object detected: {}'.format(data))
-            return None, 'invalid data object'
+            return None, 'invalid labels in data object'
         except Exception as e:
             log.error('Unknown error parsing data object: {}'.format(data))
             log.error(e)

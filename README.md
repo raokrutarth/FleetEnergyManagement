@@ -14,18 +14,30 @@ API served on port `5000`.
 
   - Docker
 
-  ```bash
-  sudo apt-get update
-  sudo apt-get install docker.io
-  docker --version
-  ```
+    ```bash
+    sudo apt-get update
+    sudo apt-get install docker.io
+    docker --version
+    ```
   - Docker compose
-  ```bash
-  sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  sudo chmod +x /usr/local/bin/docker-compose
-  docker-compose --version
-  ```
+
+    ```bash
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    docker-compose --version
+    ```
   - Available ports: 5000
+  - Verify container names do not conflict with existing containers. Check with:
+
+    ```bash
+    docker ps -a
+    ```
+    If container names are already taken, remove **existing** containers:
+
+    ```bash
+    docker rm -f ps_influxdb
+    docker rm -f ps_web_api
+    ```
 
 ## Usage
 
@@ -68,6 +80,12 @@ API served on port `5000`.
   ```
 
   **May need to use `sudo` when using docker commands depending on installation**
+
+  To stop service
+
+  ```bash
+  docker-compose down --volumes
+  ```
 
 ## Tests
   **Unit** and **integration** tests can be run once all containers are up and running. If service is already running, skip
@@ -263,6 +281,15 @@ API served on port `5000`.
         "expected_consumption": 5524
       }
       ```
+
+## Useful Commands
+
+Use each command with caution and read documentation online.
+
+    ```bash
+    docker-compose --rmi all -v --remove-orphans
+    docker system prune -a
+    ```
 
 ## Resources
 
