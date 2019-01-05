@@ -74,7 +74,8 @@ Design for Fleet Power Management tool. Using docker containers, the architectur
   - Out of range GET queries.
   - Parallel queries.
   - Running tests during service usage.
-  - Non-Integer timestamps
+  - Non-Integer spaceship_ids
+  - Datapoints posted in intervals other than 5 min, 1 hr, 15 min.
 
 
   ### Unhandled
