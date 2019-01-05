@@ -4,7 +4,8 @@
 import logging
 
 
-logfile = './data/power_service.log'
+logfile = '~/power_service/data/power_service.log'
+
 def get_logger():
     # setup logging
     logger = logging.getLogger()
