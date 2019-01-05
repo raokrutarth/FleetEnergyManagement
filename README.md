@@ -4,7 +4,7 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 
 API served on port `5000`.
 
-***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handeling and analysis.***
+***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handling  and analysis.***
 
 ## Design
 
@@ -25,7 +25,7 @@ API served on port `5000`.
   sudo chmod +x /usr/local/bin/docker-compose
   docker-compose --version
   ```
-  - Avaiable ports: 5000
+  - Available ports: 5000
 
 ## Usage
 

@@ -1,13 +1,13 @@
 # Design
 
-Design for Fleet Power Management tool. Using docker containers, the architecture seperates the data processing and data storage layers. Web Server Gateway also aims to serve parallel & high volume in requests.
+Design for Fleet Power Management tool. Using docker containers, the architecture separates the data processing and data storage layers. Web Server Gateway also aims to serve parallel & high volume in requests.
 
 ![Design Diagram](architecture_diagram.png)
 
 ## Design Decisions
 
 - Containers
-  - Allow easy platform indepandant deployment.
+  - Allow easy platform independent deployment.
   - Allows for plug-and-play type architecture where DB can be replaced without having to replace significant parts of the code base.
 
 - Using a DB optimized for timeseries data (i.e. InfluxDB) vs. NoSQL (e.g. MongoDB)
@@ -15,6 +15,7 @@ Design for Fleet Power Management tool. Using docker containers, the architectur
   - Lower disk storage usage due to on-disk compression of timeseries data.
   - Faster query performance.
   - Allows for a retention policy that flushes old data to minimize disk usage over long periods of time.
+  - In-built support graphite to visualize incoming/stored data.
 
 - Using web gateway i.e. Gunicorn
   - Allows parallel request processing. Serves more requests per second.
@@ -41,24 +42,24 @@ Design for Fleet Power Management tool. Using docker containers, the architectur
 
 - Flask & Python
   - Without Gunicorn, Golang would be a better candidate for a web server due to better parallel execution.
-  - Gorutines are multiplexed into a lower number of OS threads and use more optimezed stacks. Therefore, there can be a higher number of gorutines compared to processes, which would allow more parallel processing.
-  - Python sources are part of the deployment compared to Golang where a deployable binary can be compiled. Simplfying deployment.
+  - Gorutines are multiplexed into a lower number of OS threads and use more optimized stacks. Therefore, there can be a higher number of gorutines compared to processes, which would allow more parallel processing.
+  - Python sources are part of the deployment compared to Golang where a deployable binary can be compiled. Simplifying deployment.
 
 - Lack of authentication
   - Other ships can update values for any ship. Authentication would enforce data integrity.
 
 - Scaling
-  - Current API does not enforce data models. I.e. input data format and values do not conform to a pre-defined Class. Once data gets more complex, data validation becomes undesiribly complex without a pre-defined model.
+  - Current API does not enforce data models. I.e. input data format and values do not conform to a pre-defined Class. Once data gets more complex, data validation becomes undesirably complex without a pre-defined model.
 
 
 
 ## Assumptions
 
-- Verticle data scaling is more important that horizontal scaling. I.e. more timestamps and values vs. more fields (e.g. ship type)
+- Vertical data scaling is more important that horizontal scaling. I.e. more timestamps and values vs. more fields (e.g. ship type)
 
 - Data parsing & aggregation/disaggregation
   - When disaggregating energy data assume 0 for the time window where data is not reported.
-  - Approx. conversion from power (kW) to energy (kWh) is acceptable. Therefore, when disaggregating power usage data, values are first averaged in 15 minute windows and then converted by multiplying (15/60) for time.
+  - Approx. conversion from power (kW) to energy (kWh) is acceptable. Therefore, when disaggregating power usage data, values are first averaged in 15-minute windows and then converted by multiplying (15/60) for time.
   - When aggregating data, the 'right' interval of the 15-minute time window is used. (e.g. aggregating data for times 4:00, 4:05, 4:10 will be saved with timestamp 4:15. GET queries will serve the saved timestamps)
 
 ## Edge Cases
@@ -80,7 +81,7 @@ Design for Fleet Power Management tool. Using docker containers, the architectur
   - Storing original timestamps.
   - Empty spaceship IDs.
 
-## Refrences
+## References
 https://www.influxdata.com/blog/influxdb-is-27x-faster-vs-mongodb-for-time-series-workloads/
 https://ironboundsoftware.com/blog/2016/06/27/faster-flask-need-gunicorn/
 https://docs.influxdata.com/influxdb/v1.7/concepts/schema_and_data_layout/
