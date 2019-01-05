@@ -2,6 +2,8 @@
 
 Design for Fleet Power Management tool.
 
+![Design Diagram](Architecture Diagram.png)
+
 ## Design Decisions
 
 ## Tradeoffs

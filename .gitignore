@@ -5,3 +5,4 @@ app/data
 *data*.txt
 *.dat
 energy_usage.json
+*.DS_Store
