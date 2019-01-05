@@ -216,7 +216,7 @@ API served on port `5000`.
       }
       ```
 
-  - `GET/topusers?count=x&start=a&end=b` [TODO]
+  - `GET/topusers?count=x&start=a&end=b` [IDEA]
 
     Returns a list of `x` spaceship IDs and their consumption that correspond to the ships using the greatest amount of energy within the time window `[a, b]`. If no query parameters are provided, the top **3** users are returned within the entire queriable time window.
 
@@ -246,7 +246,7 @@ API served on port `5000`.
         ]
     }
     ```
-  - `GET/forecast?spaceship_id=x&start=a&end=b` [TODO]
+  - `GET/forecast?spaceship_id=x&start=a&end=b` [IDEA]
 
     Returns the forecasted total energy usage of a spaceship for the time window `[a, b]` using _____ linear regression/LSTM model.
 
@@ -266,28 +266,12 @@ API served on port `5000`.
 
 ## Resources
 
-https://dzone.com/articles/playing-with-docker-mqtt-grafana-influxdb-python-a
+<https://dzone.com/articles/playing-with-docker-mqtt-grafana-influxdb-python-a>
 
-https://www.codementor.io/dongido/how-to-build-restful-apis-with-python-and-flask-fh5x7zjrx
+<https://www.codementor.io/dongido/how-to-build-restful-apis-with-python-and-flask-fh5x7zjrx>
 
 <https://medium.com/@umerfarooq_26378/web-services-in-python-ef81a9067aaf>
 
 <https://medium.com/backticks-tildes/lets-build-an-api-with-django-rest-framework-32fcf40231e5>
 
-https://realpython.com/test-driven-development-of-a-django-restful-api/
-
-
-https://www.analyticsvidhya.com/blog/2016/02/time-series-forecasting-codes-python/
-
-https://machinelearningmastery.com/time-series-forecasting-methods-in-python-cheat-sheet/
-
-https://medium.com/@riken.mehta/full-stack-tutorial-flask-react-docker-ee316a46e876
-
-## useful commands
-  ```bash
-  show field keys from energy
-  docker exec -it ps_influxdb bash
-
-  precision rfc3339
-  select * from energy
-  ```
+<https://realpython.com/test-driven-development-of-a-django-restful-api/>
