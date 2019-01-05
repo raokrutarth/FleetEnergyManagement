@@ -37,4 +37,4 @@ services:
      - "8086:8086"
      - "2003:2003"
     volumes:
-     - ./app/data:/var/lib/influxdb
+     - ~/power_service/data:/var/lib/influxdb
