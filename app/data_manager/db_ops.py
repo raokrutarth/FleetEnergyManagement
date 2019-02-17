@@ -91,6 +91,20 @@ class DBManager:
             )
 
     @staticmethod
+    def get_fleet_raw_usage(start, end, log):
+        log.debug('Making DB query for fleet energy usage. start: {}, end: {}'.format(
+            start, end))
+        start = pd.Timestamp(start)
+        end = pd.Timestamp(end)
+        return DB_CLIENT.query(
+            ("SELECT {} FROM {} time >= '{}' AND time <= '{}'").format(
+                VALUE_KEY,
+                DB_TIMESERIES,
+                start.isoformat(),
+                end.isoformat())
+            )
+
+    @staticmethod
     def delete_full_energy_entry(ship_id, log):
         log.debug('Deleting DB entry for ship_id: {}'.format(ship_id))
         return DB_CLIENT.query(

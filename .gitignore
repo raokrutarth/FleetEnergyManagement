@@ -7,3 +7,4 @@ app/data
 energy_usage.json
 *.DS_Store
 docs/*.pdf
+*.zip

@@ -81,3 +81,14 @@ def respond_to_query(ship_id, start, end, log):
         )
     log.debug('Converted retrived to json response: {}'.format(resp))
     return Response(resp, status=HTTPStatus.OK, mimetype='application/json')
+
+
+def respond_to_aggregate_query(start, end):
+    err = Parser.validate_start_and_end(start, end)
+    if err != '':
+        return Response(
+            dumps({'error': err}),
+            status=HTTPStatus.BAD_REQUEST,
+            mimetype='application/json',
+        )
+    raw_usage_df = DBManager.get_fleet_raw_usage(start, end)

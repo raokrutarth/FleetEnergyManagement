@@ -238,6 +238,31 @@ API served on port `5000`.
       }
       ```
 
+    - `GET/data/fleet?start=2018-08-24T00-00-00Z&end=2018-08-24T01-00-00Z`
+
+    Request Example
+
+    Response
+
+      ```json
+      {
+          "spaceship_id": 1,
+          "units": "kWh",
+          "data": [
+              {
+                  "datetime": "2018-08-24T00:45:00Z",
+                  "sum": 50,
+                  "avg": 40
+              },
+              {
+                  "datetime": "2018-08-24T00:45:00Z",
+                  "sum": 50,
+                  "avg": 40
+              },
+          ]
+      }
+      ```
+
   - `GET/topusers?count=x&start=a&end=b` [IDEA]
 
     Returns a list of `x` spaceship IDs and their consumption that correspond to the ships using the greatest amount of energy within the time window `[a, b]`. If no query parameters are provided, the top **3** users are returned within the entire queriable time window.

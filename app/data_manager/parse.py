@@ -120,7 +120,10 @@ class Parser:
             return 'start time not found'
         elif not end:
             return 'end time not found'
+        return Parser.validate_start_and_end(start, end)
 
+    @staticmethod
+    def validate_start_and_end(start, end):
         err = ''
         try:
             pd.Timestamp(start)
@@ -130,6 +133,8 @@ class Parser:
             pd.Timestamp(end)
         except ValueError:
             err += 'invalid end time: %s' % end
+        if start > end:
+            err += 'start time greater that end time'
         return err
 
     @staticmethod
