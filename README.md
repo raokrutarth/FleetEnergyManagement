@@ -4,7 +4,7 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 
 API served on port `5000`.
 
-***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handling  and analysis.***
+***Explores time-series data handling and analysis.***
 
 ## Design
 
@@ -238,7 +238,9 @@ API served on port `5000`.
       }
       ```
 
-    - `GET/data/fleet?start=2018-08-24T00-00-00Z&end=2018-08-24T01-00-00Z`
+    - `GET/data/fleet?start=2018-08-24T00-00-00Z&end=2018-08-24T01-00-00Z` [Un-Tested]
+
+    Returns the aggregated usage by the entire fleet (all ships)
 
     Request Example
 
