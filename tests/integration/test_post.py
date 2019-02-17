@@ -1,4 +1,6 @@
 
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
 
 import requests
 import unittest
@@ -175,7 +177,7 @@ class TestPost(unittest.TestCase):
             ]
         }
         resp = requests.post(url=HOST_URL, json=data)
-        expected = 'invalid data object'
+        expected = 'invalid values in data object'
         self.assertIn(expected, resp.text)
         self.assertEqual(resp.status_code, HTTPStatus.BAD_REQUEST)
         DBManager.delete_full_energy_entry(ship_id, getLogger())

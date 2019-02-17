@@ -1,7 +1,11 @@
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
+
 import logging
+import os
 
+LOGFILE = os.path.abspath("/logs/power_service.log")
 
-logfile = './data/power_service.log'
 def get_logger():
     # setup logging
     logger = logging.getLogger()
@@ -11,7 +15,7 @@ def get_logger():
         format=fmt
     )
     # create a file handler
-    log_to_file = logging.FileHandler(logfile)
+    log_to_file = logging.FileHandler(LOGFILE)
     log_to_file.setLevel(logging.DEBUG)
 
     # create a logging format

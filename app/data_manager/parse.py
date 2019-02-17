@@ -1,4 +1,5 @@
-
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
 
 from datetime import datetime
 import dateutil.parser as dateparser
@@ -32,7 +33,8 @@ class Parser:
                 return None, 'empty data object'
             if not set([TS_KEY, VALUE_KEY]).issubset(df.columns):
                 # verify each time event has the required labels
-                log.debug('invalid labels in data object. \nexpected: {}\ngot: {}'.format(COLUMNS, df.columns))
+                log.debug('invalid labels in data object. \nexpected: {}\ngot: {}'\
+                    .format(set([TS_KEY, VALUE_KEY]), df.columns))
                 return None, 'invalid labels in data object'
             if any(df[VALUE_KEY] < 0):
                 return None, 'got negative values in data. Negative power/energy usage not allowed'
@@ -54,10 +56,10 @@ class Parser:
             return df, ''
         except ValueError:
             log.debug('Invalid values in "data" object detected: {}'.format(data))
-            return None, 'invalid data object'
+            return None, 'invalid values in data object'
         except KeyError:
             log.debug('Invalid/missing labels in data object detected: {}'.format(data))
-            return None, 'invalid data object'
+            return None, 'invalid labels in data object'
         except Exception as e:
             log.error('Unknown error parsing data object: {}'.format(data))
             log.error(e)
@@ -118,7 +120,10 @@ class Parser:
             return 'start time not found'
         elif not end:
             return 'end time not found'
+        return Parser.validate_start_and_end(start, end)
 
+    @staticmethod
+    def validate_start_and_end(start, end):
         err = ''
         try:
             pd.Timestamp(start)
@@ -128,6 +133,8 @@ class Parser:
             pd.Timestamp(end)
         except ValueError:
             err += 'invalid end time: %s' % end
+        if start > end:
+            err += 'start time greater that end time'
         return err
 
     @staticmethod
@@ -164,3 +171,5 @@ class Parser:
 
 
 
+# Author: Krutarth Rao
+# Email: raok@purdue.edu

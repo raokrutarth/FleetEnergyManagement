@@ -4,7 +4,7 @@ The Spaceship Power Service helps coordinators keep track of the energy usage by
 
 API served on port `5000`.
 
-***Project done as part of a take-home challenge for a data engineering position. Explores time-series data handling  and analysis.***
+***Explores time-series data handling and analysis.***
 
 ## Design
 
@@ -14,18 +14,31 @@ API served on port `5000`.
 
   - Docker
 
-  ```bash
-  sudo apt-get update
-  sudo apt-get install docker.io
-  docker --version
-  ```
+    ```bash
+    sudo apt-get update
+    sudo apt-get install docker.io
+    docker --version
+    ```
   - Docker compose
-  ```bash
-  sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  sudo chmod +x /usr/local/bin/docker-compose
-  docker-compose --version
-  ```
+
+    ```bash
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    docker-compose --version
+    ```
   - Available ports: 5000
+  - Verify container names do not conflict with existing containers. Check with:
+
+    ```bash
+    docker ps -a
+    ```
+    If container names are already taken, remove **existing** containers:
+
+    ```bash
+    docker rm -f ps_influxdb
+    docker rm -f ps_web_api
+    ```
+- Docker should have rights to create a directory in `$HOME` to persist DB data.
 
 ## Usage
 
@@ -69,9 +82,18 @@ API served on port `5000`.
 
   **May need to use `sudo` when using docker commands depending on installation**
 
+  To stop service
+
+  ```bash
+  docker-compose down --volumes
+  ```
+
 ## Tests
+
   **Unit** and **integration** tests can be run once all containers are up and running. If service is already running, skip
-  `docker-compose up --detach`. When using `docker-compose up --detach`, services may take upto 3 seconds to become available.
+  `docker-compose up --detach`. When using `docker-compose up --detach`, services may take upto a minute to become available
+  as the docker images are pulled.
+
   ```bash
   docker-compose up --detach
   docker exec -it ps_web_api python -m unittest discover -v -s /tests/unit/
@@ -216,7 +238,34 @@ API served on port `5000`.
       }
       ```
 
-  - `GET/topusers?count=x&start=a&end=b` [TODO]
+    - `GET/data/fleet?start=2018-08-24T00-00-00Z&end=2018-08-24T01-00-00Z` [Un-Tested]
+
+    Returns the aggregated usage by the entire fleet (all ships)
+
+    Request Example
+
+    Response
+
+      ```json
+      {
+          "spaceship_id": 1,
+          "units": "kWh",
+          "data": [
+              {
+                  "datetime": "2018-08-24T00:45:00Z",
+                  "sum": 50,
+                  "avg": 40
+              },
+              {
+                  "datetime": "2018-08-24T00:45:00Z",
+                  "sum": 50,
+                  "avg": 40
+              },
+          ]
+      }
+      ```
+
+  - `GET/topusers?count=x&start=a&end=b` [IDEA]
 
     Returns a list of `x` spaceship IDs and their consumption that correspond to the ships using the greatest amount of energy within the time window `[a, b]`. If no query parameters are provided, the top **3** users are returned within the entire queriable time window.
 
@@ -246,7 +295,7 @@ API served on port `5000`.
         ]
     }
     ```
-  - `GET/forecast?spaceship_id=x&start=a&end=b` [TODO]
+  - `GET/forecast?spaceship_id=x&start=a&end=b` [IDEA]
 
     Returns the forecasted total energy usage of a spaceship for the time window `[a, b]` using _____ linear regression/LSTM model.
 
@@ -264,30 +313,23 @@ API served on port `5000`.
       }
       ```
 
+## Useful Commands
+
+Use each command with caution and read documentation online.
+
+    ```bash
+    docker-compose --rmi all -v --remove-orphans
+    docker system prune -a
+    ```
+
 ## Resources
 
-https://dzone.com/articles/playing-with-docker-mqtt-grafana-influxdb-python-a
+<https://dzone.com/articles/playing-with-docker-mqtt-grafana-influxdb-python-a>
 
-https://www.codementor.io/dongido/how-to-build-restful-apis-with-python-and-flask-fh5x7zjrx
+<https://www.codementor.io/dongido/how-to-build-restful-apis-with-python-and-flask-fh5x7zjrx>
 
 <https://medium.com/@umerfarooq_26378/web-services-in-python-ef81a9067aaf>
 
 <https://medium.com/backticks-tildes/lets-build-an-api-with-django-rest-framework-32fcf40231e5>
 
-https://realpython.com/test-driven-development-of-a-django-restful-api/
-
-
-https://www.analyticsvidhya.com/blog/2016/02/time-series-forecasting-codes-python/
-
-https://machinelearningmastery.com/time-series-forecasting-methods-in-python-cheat-sheet/
-
-https://medium.com/@riken.mehta/full-stack-tutorial-flask-react-docker-ee316a46e876
-
-## useful commands
-  ```bash
-  show field keys from energy
-  docker exec -it ps_influxdb bash
-
-  precision rfc3339
-  select * from energy
-  ```
+<https://realpython.com/test-driven-development-of-a-django-restful-api/>

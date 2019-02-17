@@ -73,18 +73,27 @@ Design for Fleet Power Management tool. Using docker containers, the architectur
   - Missing start/end times in GET queries.
   - Out of range GET queries.
   - Parallel queries.
+  - Running tests during service usage.
+  - Non-Integer spaceship_ids
+  - Datapoints posted in intervals other than 5 min, 1 hr, 15 min.
 
 
   ### Unhandled
 
   - Saving data labels in addition to those specified in spec.
-  - Storing original timestamps.
+  - Storing original timestamps and values.
   - Empty spaceship IDs.
+  - Overlapping timestamps after aggregation. I.e. If one request POSTs times of 4:15, 4:30 and a subsequent request posts times 4:05 and 4:10, the 4:15 timestamp value will be overwritten with the new aggregated value.
+  - Since the requests do not go through a queue, the behaviour for parallel requests is undefined since each falsk worker may take a variable amount of time to write/read to/from the DB depending on the system process scheduling.
 
 ## References
 https://www.influxdata.com/blog/influxdb-is-27x-faster-vs-mongodb-for-time-series-workloads/
 https://ironboundsoftware.com/blog/2016/06/27/faster-flask-need-gunicorn/
 https://docs.influxdata.com/influxdb/v1.7/concepts/schema_and_data_layout/
+
+## Author
+
+Krutarth Rao
 
 
 

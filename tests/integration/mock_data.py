@@ -1,4 +1,5 @@
-
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
 
 from uuid import uuid1
 BASIC = {

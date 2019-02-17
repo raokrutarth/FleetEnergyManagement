@@ -1,3 +1,6 @@
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
+
 from influxdb import DataFrameClient
 import os
 import requests
@@ -83,6 +86,20 @@ class DBManager:
                 DB_TIMESERIES,
                 TAG_KEY,
                 str(ship_id),
+                start.isoformat(),
+                end.isoformat())
+            )
+
+    @staticmethod
+    def get_fleet_raw_usage(start, end, log):
+        log.debug('Making DB query for fleet energy usage. start: {}, end: {}'.format(
+            start, end))
+        start = pd.Timestamp(start)
+        end = pd.Timestamp(end)
+        return DB_CLIENT.query(
+            ("SELECT {} FROM {} time >= '{}' AND time <= '{}'").format(
+                VALUE_KEY,
+                DB_TIMESERIES,
                 start.isoformat(),
                 end.isoformat())
             )

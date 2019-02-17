@@ -1,4 +1,6 @@
 
+# Author: Krutarth Rao
+# Email: raok@purdue.edu
 
 from http import HTTPStatus
 from flask import Flask, request, send_file
@@ -6,10 +8,10 @@ from flask import Flask, request, send_file
 
 try:
     from .debug import get_logger
-    from .data_manager import ingest_data_and_respond, respond
+    from .data_manager import ingest_data_and_respond, respond_to_query, respond_to_aggregate_query
 except ImportError:
     from debug import get_logger
-    from data_manager import ingest_data_and_respond, respond_to_query
+    from data_manager import ingest_data_and_respond, respond_to_query, respond_to_aggregate_query
 
 app = Flask(__name__)
 log = get_logger()
@@ -36,6 +38,17 @@ def data():
     if request.method == 'GET':
         return respond_to_query(
             request.args.get('spaceship_id'),
+            request.args.get('start'),
+            request.args.get('end'),
+            log
+        )
+@app.route('/data/fleet', methods=['GET'])
+def fleet_data():
+    '''
+        aggregation endpoint for the whole fleet
+    '''
+    if request.method == 'GET':
+        return respond_to_aggregate_query(
             request.args.get('start'),
             request.args.get('end'),
             log
